@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { text-align: center; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 8px; margin: 8px 0; }
+    button { width: 100%; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>User Profile</h1>
+    <img src="profile.png" alt="User profile picture" style="width:100%;">
+    <form id="profileForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+      <label for="interests">Interests:</label>
+      <input type="text" id="interests" name="interests">
+      <button type="button" onclick="updateProfile()">Update Profile</button>
+    </form>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    // Fetch the user profile on page load
+    window.onload = function() {
+      fetch('http://localhost:3000/get-profile')
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('interests').value = data.interests || '';
+          }
+        })
+        .catch(error => console.error('Error fetching profile:', error));
+    };
+
+    function updateProfile() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const interests = document.getElementById('interests').value;
+
+      fetch('http://localhost:3000/update-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, interests })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('message').innerText = data.message;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
