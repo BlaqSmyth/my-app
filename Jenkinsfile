@@ -77,7 +77,7 @@ pipeline {
 
     post {
         failure {
-            mail to: 'smitheghar@gmail.com',
+            mail to: 'your-email@example.com',
                  subject: "Jenkins Build Failed: ${currentBuild.fullDisplayName}",
                  body: "The build failed. Please check the logs for details."
         }
